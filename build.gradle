@@ -1,16 +1,83 @@
-def lintTask = project.tasks.create('lintGradle')
-
-project.tasks.whenTaskAdded { task ->
-    if (task != lintTask) {
-        task.finalizedBy lintTask
-    }
+project("a") {
+  task test {
+    dependsOn "testClasses"
+    dependsOn ":b:jar"
+    dependsOn "classes"
+    finalizedBy ":someTaskThatFinalizeJavaTestTask"
+  }
+  
+  task testClasses {
+    dependsOn "processTestResources"
+    dependsOn "compileTestJava"
+  }
+  
+  task processTestResources {}
+  
+  task compileTestJava {
+    dependsOn ":b:jar"
+    dependsOn "classes"
+  }
+  
+  task classes {
+    dependsOn "compileJava"
+    dependsOn "processResources"
+  }
+  
+  task compileJava {
+    dependsOn ":b:jar"
+  }
+  
+  task processResources {}
+  
+  task jar {
+    dependsOn "classes"
+  }
 }
 
-task someTaskThatGenerateJavaResources {}
-
-def task = tasks.create("someTaskThatFinalizeJavaTestTask")
-subprojects { project ->
-    project.tasks.withType(Test) { Test testTask ->
-        testTask.finalizedBy task
-    }
+project("b") {
+  task jar {
+    dependsOn "classes"
+  }
+  
+  task classes {
+    dependsOn "compileJava"
+    dependsOn "processResources"
+  }
+  
+  task compileJava {}
+  
+  task processResources {
+    dependsOn ":someTaskThatGenerateJavaResources"
+  }
+  
+  task test {
+    dependsOn ":a:jar"
+    dependsOn "jar"
+    dependsOn "testClasses"
+    finalizedBy ":someTaskThatFinalizeJavaTestTask"
+  }
+  
+  task testClasses {
+    dependsOn "processTestResources"
+    dependsOn "compileTestJava"
+  }
+  
+  task processTestResources {}
+  
+  task compileTestJava {
+    dependsOn ":a:jar"
+    dependsOn "jar"
+    dependsOn "classes"
+  }
 }
+
+task someTaskThatFinalizeJavaTestTask {
+  finalizedBy "lintGradle"
+}
+
+task someTaskThatGenerateJavaResources {
+  finalizedBy "lintGradle"
+}
+
+task lintGradle {}
+
