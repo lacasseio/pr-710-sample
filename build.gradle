@@ -1,33 +1,25 @@
 project("a") {
   task test {
     dependsOn "testClasses"
-    dependsOn ":b:jar"
     dependsOn "classes"
     finalizedBy ":someTaskThatFinalizeJavaTestTask"
   }
   
   task testClasses {
-    dependsOn "processTestResources"
     dependsOn "compileTestJava"
   }
   
-  task processTestResources {}
-  
   task compileTestJava {
     dependsOn ":b:jar"
-    dependsOn "classes"
   }
   
   task classes {
     dependsOn "compileJava"
-    dependsOn "processResources"
   }
   
   task compileJava {
     dependsOn ":b:jar"
   }
-  
-  task processResources {}
   
   task jar {
     dependsOn "classes"
@@ -40,11 +32,8 @@ project("b") {
   }
   
   task classes {
-    dependsOn "compileJava"
     dependsOn "processResources"
   }
-  
-  task compileJava {}
   
   task processResources {
     dependsOn ":someTaskThatGenerateJavaResources"
@@ -52,20 +41,15 @@ project("b") {
   
   task test {
     dependsOn ":a:jar"
-    dependsOn "jar"
     dependsOn "testClasses"
     finalizedBy ":someTaskThatFinalizeJavaTestTask"
   }
   
   task testClasses {
-    dependsOn "processTestResources"
     dependsOn "compileTestJava"
   }
   
-  task processTestResources {}
-  
   task compileTestJava {
-    dependsOn ":a:jar"
     dependsOn "jar"
     dependsOn "classes"
   }
