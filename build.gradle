@@ -1,37 +1,33 @@
-project("a") {
-  task test {
-    dependsOn "compileTestJava"
-    dependsOn "classes"
-    finalizedBy ":someTaskThatFinalizeJavaTestTask"
-  }
-  
-  task compileTestJava {
-    dependsOn ":b:jar"
-  }
-  
-  task classes {
-    dependsOn ":b:jar"
-  }
-  
-  task compileJava {
-    dependsOn ":b:jar"
-  }
+task testA {
+  dependsOn "compileTestAJava"
+  dependsOn "classes"
+  finalizedBy "someTaskThatFinalizeJavaTestTask"
 }
 
-project("b") {
-  task jar {
-    dependsOn ":someTaskThatGenerateJavaResources"
-  }
-  
-  task test {
-    dependsOn ":a:classes"
-    dependsOn "compileTestJava"
-    finalizedBy ":someTaskThatFinalizeJavaTestTask"
-  }
-  
-  task compileTestJava {
-    dependsOn "jar"
-  }
+task compileTestAJava {
+  dependsOn "jar"
+}
+
+task classes {
+  dependsOn "jar"
+}
+
+task a_compileJava {
+  dependsOn "jar"
+}
+
+task jar {
+  dependsOn "someTaskThatGenerateJavaResources"
+}
+
+task testB {
+  dependsOn "classes"
+  dependsOn "compileTestBJava"
+  finalizedBy "someTaskThatFinalizeJavaTestTask"
+}
+
+task compileTestBJava {
+  dependsOn "jar"
 }
 
 task someTaskThatFinalizeJavaTestTask {
