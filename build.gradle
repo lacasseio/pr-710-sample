@@ -1,42 +1,38 @@
-task testA {
-  dependsOn "compileTestAJava"
-  dependsOn "classes"
-  finalizedBy "someTaskThatFinalizeJavaTestTask"
+task a {
+  dependsOn "compileA"
+  dependsOn "common"
+  finalizedBy "someTask"
 }
 
-task compileTestAJava {
+task compileA {
   dependsOn "jar"
 }
 
-task classes {
-  dependsOn "jar"
-}
-
-task a_compileJava {
+task common {
   dependsOn "jar"
 }
 
 task jar {
-  dependsOn "someTaskThatGenerateJavaResources"
+  dependsOn "someRes"
 }
 
-task testB {
-  dependsOn "classes"
-  dependsOn "compileTestBJava"
-  finalizedBy "someTaskThatFinalizeJavaTestTask"
+task b {
+  dependsOn "common"
+  dependsOn "compileB"
+  finalizedBy "someTask"
 }
 
-task compileTestBJava {
+task compileB {
   dependsOn "jar"
 }
 
-task someTaskThatFinalizeJavaTestTask {
-  finalizedBy "lintGradle"
+task someTask {
+  finalizedBy "lint"
 }
 
-task someTaskThatGenerateJavaResources {
-  finalizedBy "lintGradle"
+task someRes {
+  finalizedBy "lint"
 }
 
-task lintGradle {}
+task lint {}
 
