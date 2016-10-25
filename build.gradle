@@ -1,7 +1,6 @@
 task a {
   dependsOn "compileA"
   dependsOn "common"
-  finalizedBy "someTask"
 }
 
 task compileA {
@@ -17,13 +16,8 @@ task jar {
 }
 
 task b {
-  dependsOn "common"
-  dependsOn "compileB"
-  finalizedBy "someTask"
-}
-
-task compileB {
   dependsOn "jar"
+  finalizedBy "someTask"
 }
 
 task someTask {
