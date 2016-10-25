@@ -13,10 +13,6 @@ task common {
 
 task jar {
   dependsOn "someRes"
-}
-
-task b {
-  dependsOn "jar"
   finalizedBy "someTask"
 }
 
